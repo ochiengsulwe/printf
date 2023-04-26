@@ -1,16 +1,18 @@
 #include "main.h"
 #include <unistd.h>
+#include <stdio.h>
 /**
   *basic_int - prints the basic intergers(positive)
   *@x: the interger
+  *@base: the base of the interger
   *
   *Return: the number of characters printed
   */
-int basic_int(int x)
+int basic_int(unsigned int x, unsigned int base)
 {
-	if (x < 10)
+	if (x < base)
 		return (single_char(x + '0'));
-	return (basic_int(x / 10) + single_char((x % 10) + '0'));
+	return (basic_int((x / base), base) + single_char((x % base) + '0'));
 }
 /**
   *print_dint - prints the signed intergers
@@ -28,12 +30,12 @@ int print_dint(va_list args)
 	if (c < 0)
 	{
 		b = (unsigned int) ((c + 1) * -1);
-		b = b - 1;
+		b = b + 1;
 		i += single_char('-');
 	}
 	else
 		b = c;
-	return (i + basic_int(b));
+	return (i + basic_int(b, 10));
 }
 /**
   *print_bint - prints the intergers in binary format
@@ -43,17 +45,9 @@ int print_dint(va_list args)
   */
 int print_bint(va_list args)
 {
-	int c = va_arg(args, unsigned int);
-	int b = 0;
+	unsigned int c = va_arg(args, unsigned int);
 
-	while (c > 0)
-	{
-		b += single_char((c % 2) + '0');
-		c = c / 2;
-	}
-	if (c == 0)
-		b += single_char('0');
-	return (b);
+	return (basic_int(c, 2));
 }
 /**
   *single_char - prints a single char to the stdout
@@ -76,5 +70,5 @@ int print_uint(va_list args)
 	unsigned int c;
 
 	c = va_arg(args, unsigned int);
-	return (basic_int(c));
+	return (basic_int(c, 10));
 }

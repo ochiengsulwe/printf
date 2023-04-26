@@ -50,7 +50,10 @@ int writeto_buf(const char *s, va_list args, char *buffer)
 			buf_id = buffer = clear_mem(buf_id, BUFFSIZE);
 			buf_locator = 0;
 			c = *(++temp);
-			pnum += formatit(c, args);
+			if (c == '%')
+				pnum += single_char('%');
+			else
+				pnum += formatit(c, args);
 		}
 		else
 		{
@@ -73,17 +76,40 @@ int writeto_buf(const char *s, va_list args, char *buffer)
 int formatit(char c, va_list args)
 {
 	int nump = 0;
+	int (*ptr)(va_list args);
 
-	int (*conversions[6 * 8])(va_list args);
-
-	conversions['c'] = &printchar;
-	conversions['s'] = &print_str;
-	conversions['i'] = &print_dint;
-	conversions['d'] = &print_dint;
-	conversions['b'] = &print_bint;
-	conversions['u'] = &print_uint;
-
-	if (conversions[c])
-		nump += conversions[c](args);
+	switch (c)
+	{
+		case 'c':
+			ptr = &printchar;
+			break;
+		case 's':
+			ptr = &print_str;
+			break;
+		case 'i':
+		case 'd':
+			ptr = &print_dint;
+			break;
+		case 'b':
+			ptr = print_bint;
+			break;
+		case 'u':
+			ptr = print_uint;
+			break;
+		case 'o':
+			ptr = print_oint;
+			break;
+		case 'x':
+			ptr = print_xint;
+			break;
+		case 'X':
+			ptr = print_Xint;
+			break;
+		default:
+			nump += single_char('%');
+			nump += single_char(c);
+			break;
+	}
+	nump += ptr(args);
 	return (nump);
 }
