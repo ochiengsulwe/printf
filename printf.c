@@ -19,6 +19,8 @@ int _printf(const char *format, ...)
 
 	pnum = 0;
 	buffer = create_mem(BUFFSIZE);
+	if (buffer == NULL)
+		exit(12);
 	va_start(params, format);
 	pnum += writeto_buf(format, params, buffer);
 	va_end(params);
