@@ -22,6 +22,8 @@ int _printf(const char *format, ...)
 	if (buffer == NULL)
 		exit(12);
 	va_start(params, format);
+	if (format == NULL)
+		return (0);
 	pnum += writeto_buf(format, params, buffer);
 	va_end(params);
 	free(buffer);
@@ -106,6 +108,9 @@ int formatit(char c, va_list args)
 			break;
 		case 'X':
 			ptr = print_Xint;
+			break;
+		case 'p':
+			ptr = print_p;
 			break;
 		default:
 			nump += single_char('%');

@@ -19,6 +19,8 @@ int print_uint(va_list args);
 int print_oint(va_list args);
 int print_xint(va_list args);
 int print_Xint(va_list args);
+int print_p(va_list args);
 int hexa(unsigned int num, char start);
+int p_hexa(size_t a);
 int single_hexa(unsigned int num, char start);
 #endif
